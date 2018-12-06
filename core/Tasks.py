@@ -1,4 +1,5 @@
-from core.Worker import CommonWorker
+from core.Worker import Worker
+from core.Check import Check
 from core.MsgHandler import LogHandler
 import asyncio
 import time
@@ -7,18 +8,20 @@ import time
 class CommonTasks(object):
     def __init__(self):
         self.log = LogHandler()
-        self.worker = CommonWorker()
+        self.worker = Worker()
+        self.check = Check()
 
     async def create_tasks(self, url, tag):
-        authorization_token = await self.worker.get_token.work()
+        authorization_token = await self.check.check_authorization_code()
         if isinstance(url, str):
-            spider_task = asyncio.create_task(self.worker.spider.work(url=url))
+            spider_task = asyncio.create_task(self.worker.spider_worker(url))
             file_name, pdf_buffer = await spider_task
 
-            upload_task = asyncio.create_task(self.worker.upload.work(authorization_token, pdf_buffer,
-                                                                      self.tag2path(tag, file_name)))
+            upload_task = asyncio.create_task(self.worker.upload_worker(authorization_token, pdf_buffer,
+                                                                        self.tag2path(tag, file_name)))
             await upload_task
 
-    def tag2path(self, tag, file_name):
+    @staticmethod
+    def tag2path(tag, file_name):
         return "/" + tag + "/" + file_name + ".pdf"
 
