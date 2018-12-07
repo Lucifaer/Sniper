@@ -1,0 +1,23 @@
+.vscode
+
+**/media/**
+**/__pycache__/**
+**/myenv/**
+**/CACHE/**
+**/build/**
+*.egg-info
+*.egg
+.idea
+SpiderKeeper.db
+env
+.sass-cache
+.DS_Store
+upload_post
+logs
+run
+gunicorn_start
+.egg
+
+# project
+config.py
+authorization_code.json

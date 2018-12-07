@@ -1,5 +1,5 @@
 from core.MsgHandler import LogHandler
-from plugin.scroll_page import scroll_page_js
+from plugin.scroll_page import scroll_page
 from pyppeteer import launch
 import time
 
@@ -24,20 +24,16 @@ class Spider(object):
         self.log.detail_info(f"[*] Start crawl {url}")
         self.log.detail_info(f"[*] {url} started at {time.strftime('%X')}")
         # Handle Error: pyppeteer.errors.NetworkError: Protocol error Runtime.callFunctionOn: Target closed.
+        # Issue fix #1 by C1tas
         try:
-            browser = await launch({
-                'headless': True,
-                'args': ['--no-sandbox'],
-                'timeout': 60000
-            })
+            browser = await launch()
             page = await browser.newPage()
             await page.setViewport(self.set_view_port_option)
-            page.setDefaultNavigationTimeout(60000)
             await page.goto(url, self.goto_option)
+            await scroll_page(page)
+            pdf = await page.pdf(self.pdf_option)
             title = await page.title()
             filename = await self.translate_word(title)
-            await page.evaluate(scroll_page_js)
-            pdf = await page.pdf(self.pdf_option)
             await browser.close()
             self.log.detail_info(f"[*] {url} finished at {time.strftime('%X')}")
             return filename, pdf
@@ -47,12 +43,9 @@ class Spider(object):
         finally:
             await browser.close()
 
-    async def translate_word(self, word):
+    @staticmethod
+    async def translate_word(word):
         table = {ord(f): ord(t) for f, t in zip(
             u'，。！？【】（）/％＃＠＆１２３４５６７８９０',
             u',.!?[]()-%#@&1234567890')}
         return word.translate(table)
-
-# if __name__ == '__main__':
-#     test = Spider()
-#     asyncio.run(test.create_spider('https://xz.aliyun.com/t/3264'))

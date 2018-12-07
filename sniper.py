@@ -8,7 +8,7 @@ def console():
 
 
 @console.command('upload')
-@click.option('--tag', '-t', default='', help="tag标签：\n"
+@click.option('--tag', '-t', default='test', help="tag标签：\n"
                                               "格式：category/tags\n"
                                               "如：tips/任意文件读取 或 ctf/web")
 @click.argument('url', required=True)
