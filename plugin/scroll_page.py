@@ -1,6 +1,6 @@
 scroll_page_js = '''
 async () => {
-        await new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
         let totalHeight = 0;
         let distance = 100;
         let timer = setInterval(() => {
