@@ -23,6 +23,7 @@ class Spider(object):
     async def spider(self, url):
         self.log.detail_info(f"[*] Start crawl {url}")
         self.log.detail_info(f"[*] {url} started at {time.strftime('%X')}")
+        # Handle Error: pyppeteer.errors.NetworkError: Protocol error Runtime.callFunctionOn: Target closed.
         browser = await launch()
         page = await browser.newPage()
         await page.setViewport(self.set_view_port_option)
