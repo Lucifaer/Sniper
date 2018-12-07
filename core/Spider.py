@@ -2,7 +2,7 @@ from core.MsgHandler import LogHandler
 from plugin.scroll_page import scroll_page_js
 from pyppeteer import launch
 import time
-
+import asyncio
 
 class Spider(object):
     def __init__(self):
@@ -25,13 +25,26 @@ class Spider(object):
         self.log.detail_info(f"[*] {url} started at {time.strftime('%X')}")
         # Handle Error: pyppeteer.errors.NetworkError: Protocol error Runtime.callFunctionOn: Target closed.
         browser = await launch()
+        # browser = await launch({
+        #     'args': ['--no-sandbox', '--disable-dev-shm-usage']
+        # })
         page = await browser.newPage()
         await page.setViewport(self.set_view_port_option)
         await page.goto(url, self.goto_option)
+
+        cur_dist = 0
+        height = await page.evaluate("() => document.body.scrollHeight")
+        while True:
+            if cur_dist < height:
+                await page.evaluate("window.scrollBy(0, 500);")
+                await asyncio.sleep(0.1)
+                cur_dist += 500
+            else:
+                break
+        
+        pdf = await page.pdf(self.pdf_option)
         title = await page.title()
         filename = await self.translate_word(title)
-        await page.evaluate(scroll_page_js)
-        pdf = await page.pdf(self.pdf_option)
         await browser.close()
         self.log.detail_info(f"[*] {url} finished at {time.strftime('%X')}")
         return filename, pdf
