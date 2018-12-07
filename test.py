@@ -1,6 +1,5 @@
 from core.Tasks import CommonTasks
 from core.Producer import Producer
-from core.Worker import Worker
 from core.Check import Check
 from core.Worker import Worker
 from core.Spider import Spider
@@ -44,8 +43,13 @@ import json
 #     worker = Worker()
 #     asyncio.run(worker.spider_worker(url))
 
+# if __name__ == '__main__':
+#     tasks = CommonTasks()
+#     url = 'https://www.freebuf.com/vuls/126499.html'
+#     asyncio.run(tasks.create_tasks(url, 'sniper/test'))
+
 if __name__ == '__main__':
-    tasks = CommonTasks()
-    url = 'https://www.freebuf.com/vuls/126499.html'
-    asyncio.run(tasks.create_tasks(url, 'sniper/test'))
+    spider = Spider()
+    url = 'https://www.anquanke.com/post/id/167384'
+    asyncio.run(spider.spider(url))
 
