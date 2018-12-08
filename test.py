@@ -1,7 +1,4 @@
 from core.Tasks import CommonTasks
-from core.Producer import Producer
-from core.Check import Check
-from core.Worker import Worker
 from core.Spider import Spider
 import asyncio
 import json
