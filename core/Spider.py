@@ -17,7 +17,7 @@ class Spider(object):
         self.pdf_option = {
             'width': 1920,
             'height': 1080,
-            'format': 'A4',
+            'format': 'A1',
         }
 
     async def spider(self, url):
@@ -38,7 +38,7 @@ class Spider(object):
             self.log.detail_info(f"[*] {url} finished at {time.strftime('%X')}")
             return filename, pdf
         except Exception as exc:
-            self.log.error_then(f"[-] Occur an unexcepted error when crawl {url}: {str(exc)}!")
+            self.log.error_then(f"[-] Occur an unexpected error when crawl {url}: {str(exc)}!")
             self.log.detail_info(f"[*] {url} finished at {time.strftime('%X')}")
         finally:
             await browser.close()
