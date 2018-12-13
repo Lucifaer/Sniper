@@ -1,13 +1,12 @@
-from core.MsgHandler import CheckMsg
+from core.DropBox.base import Base
 import aiohttp
 import json
 
 
-class Upload(object):
+class Upload(Base):
     def __init__(self, authorization_token):
+        super().__init__(authorization_token)
         self.upload_endpoint = 'https://content.dropboxapi.com/2/files/upload'
-        self.log = CheckMsg()
-        self.token = authorization_token
 
     async def upload(self, file_buffer, tag):
         upload_params = {
@@ -24,16 +23,4 @@ class Upload(object):
             'Dropbox-API-Arg': json.dumps(upload_params),
         }
 
-        # data = {
-        #     'file': file_buffer
-        # }
-
-        is_proxy = self.log.proxy_warning()
-
-        async with aiohttp.ClientSession() as session:
-            if is_proxy == "":
-                async with session.post(self.upload_endpoint, headers=headers, data=file_buffer) as response:
-                    return await response.text()
-            else:
-                async with session.post(self.upload_endpoint, headers=headers, data=file_buffer, proxy=is_proxy) as response:
-                    return await response.text()
+        return await self.requests(endpoint=self.upload_endpoint, headers=headers, data=file_buffer)

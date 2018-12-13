@@ -21,8 +21,8 @@ class Spider(object):
         }
 
     async def spider(self, url):
-        self.log.detail_info(f"[*] Start crawl {url}")
-        self.log.detail_info(f"[*] {url} started at {time.strftime('%X')}")
+        self.log.detail_info(f"Start crawl {url}")
+        self.log.detail_info(f"{url} started at {time.strftime('%X')}")
         # Handle Error: pyppeteer.errors.NetworkError: Protocol error Runtime.callFunctionOn: Target closed.
         # Issue fix #1 by C1tas
         try:
@@ -35,11 +35,11 @@ class Spider(object):
             title = await page.title()
             filename = await self.translate_word(title)
             await browser.close()
-            self.log.detail_info(f"[*] {url} finished at {time.strftime('%X')}")
+            self.log.detail_info(f"{url} finished at {time.strftime('%X')}")
             return filename, pdf
         except Exception as exc:
-            self.log.error_then(f"[-] Occur an unexpected error when crawl {url}: {str(exc)}!")
-            self.log.detail_info(f"[*] {url} finished at {time.strftime('%X')}")
+            self.log.error_then(f"Occur an unexpected error when crawl {url}: {str(exc)}!")
+            self.log.detail_info(f"{url} finished at {time.strftime('%X')}")
         finally:
             await browser.close()
 
