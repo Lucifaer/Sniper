@@ -1,9 +1,9 @@
-from core.WorkerInterface import WorkerInterface
+from core.Worker.base import Base
 from core.DropBox.upload import Upload
 import json
 
 
-class UploadWorker(WorkerInterface):
+class UploadWorker(Base):
     async def work(self, authorization_token, file_buffer, tag):
         file, path = await self.pre_check(file_buffer=file_buffer, tag=tag)
         self.log.detail_info("Start upload files")

@@ -1,6 +1,6 @@
 from core.MsgHandler import LogHandler
 
 
-class WorkerInterface(object):
+class Base(object):
     def __init__(self):
         self.log = LogHandler()
