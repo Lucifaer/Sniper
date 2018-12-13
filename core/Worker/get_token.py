@@ -1,11 +1,11 @@
-from core.WorkerInterface import WorkerInterface
+from core.Worker.base import Base
 from core.DropBox.authorization import Authorization
 from config import DROPBOX_AUTHORIZATION_CODE, client_id
 import json
 import os
 
 
-class GetTokenWorker(WorkerInterface):
+class GetTokenWorker(Base):
     async def work(self):
         if os.path.exists('authorization_code.json'):
             self.log.detail_info("File: authorization_code.json is exist!")

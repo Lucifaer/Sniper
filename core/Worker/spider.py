@@ -1,8 +1,8 @@
-from core.WorkerInterface import WorkerInterface
+from core.Worker.base import Base
 from core.Spider import Spider
 
 
-class SpiderWorker(WorkerInterface):
+class SpiderWorker(Base):
     async def work(self, url):
         url = await self.pre_check(url=url)
         spider = Spider()
