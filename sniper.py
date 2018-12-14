@@ -19,6 +19,15 @@ def upload(url, tag):
     asyncio.run(tasks.create_tasks(url=url, tag=tag))
 
 
+@console.command('invite')
+@click.argument('invite_list', required=True)
+def invite(invite_list):
+    from core.Tasks import InviteTasks
+    import asyncio
+    tasks = InviteTasks()
+    asyncio.run(tasks.create_tasks(invite_list=invite_list))
+
+
 if __name__ == '__main__':
     click.secho(logo, fg='bright_green')
     console()
