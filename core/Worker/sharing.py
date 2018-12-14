@@ -1,6 +1,6 @@
 from core.Worker.base import Base
 from core.DropBox.sharing import Sharing
-from config import TEAM_OWNER_AUTHORIZATION_CODE, SHARING_DOCUMENT_ID
+from config import TEAM_OWNER_AUTHORIZATION_CODE, SHARING_DOCUMENT_ID, SHARING_DOCUMENT_ROOT
 from pprint import pprint
 
 
@@ -8,22 +8,19 @@ class SharingWorker(Base):
     async def work(self, authorization_token, mod, args):
         mod_switch = await self.pre_check(mod)
         self.log.detail_info("Start sharing")
-        if authorization_token != TEAM_OWNER_AUTHORIZATION_CODE:
-            if mod_switch[0] == "team_owner":
-                sharing = Sharing(authorization_token=TEAM_OWNER_AUTHORIZATION_CODE)
-            else:
-                sharing = Sharing(authorization_token=authorization_token)
-
+        sharing = Sharing(authorization_token=authorization_token)
         if mod_switch[0] == "team_owner":
             if mod_switch[1] == "add_folder_member":
-                for i in args['members']:
-                    pprint(await sharing.add_folder_member(args['shared_folder_id'], i, args['custom_message']))
+                return await sharing.add_folder_member(SHARING_DOCUMENT_ID, args['members'], args['custom_message'])
             elif mod_switch[1] == "share_folder":
-                pprint(await sharing.share_folder(args['path']))
+                return await sharing.share_folder(args['path'])
 
         elif mod_switch[0] == "team_member":
-            for i in args['members']:
-                pprint(await sharing.add_file_member(args['file'], i, args['custom_message']))
+            if mod_switch[1] == "add_file_member":
+                return await sharing.add_file_member(SHARING_DOCUMENT_ROOT + args['file'],
+                                                     args['members'], args['custom_message'])
+            elif mod_switch[1] == "create_shared_link":
+                return await sharing.create_shared_link_with_settings(SHARING_DOCUMENT_ROOT + args['path'])
 
         else:
             self.log.error_then("Sniper only have three mod to share files:")
@@ -33,7 +30,7 @@ class SharingWorker(Base):
 
     async def pre_check(self, mod):
         mod_switch = mod.split('.')
-        if len(mod_switch) > 2:
+        if len(mod_switch) != 2:
             self.log.error_info(f"There is no sharing mod name {mod}")
         if mod_switch[0] == "team_owner":
             if TEAM_OWNER_AUTHORIZATION_CODE == "":
