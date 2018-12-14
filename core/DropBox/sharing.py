@@ -1,5 +1,4 @@
 from core.DropBox.base import Base
-from pprint import pprint
 
 
 class Sharing(Base):
@@ -8,6 +7,7 @@ class Sharing(Base):
         self.add_file_member_endpoint = 'https://api.dropboxapi.com/2/sharing/add_file_member'
         self.add_folder_member_endpoint = 'https://api.dropboxapi.com/2/sharing/add_folder_member'
         self.share_folder_endpoint = 'https://api.dropboxapi.com/2/sharing/share_folder'
+        self.create_shared_link_with_settings_endpoint = 'https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings'
 
     async def add_file_member(self, file, members, custom_message):
         data = {
@@ -37,7 +37,7 @@ class Sharing(Base):
             'Content-Type': "application/json",
         }
 
-        return pprint(await self.requests(endpoint=self.add_folder_member_endpoint, headers=headers, data=data))
+        return await self.requests(endpoint=self.add_folder_member_endpoint, headers=headers, data=data)
 
     async def share_folder(self, path):
         data = {
@@ -52,4 +52,18 @@ class Sharing(Base):
             'Content-Type': "application/json",
         }
 
-        return pprint(await self.requests(endpoint=self.share_folder_endpoint, headers=headers, data=data))
+        return await self.requests(endpoint=self.share_folder_endpoint, headers=headers, data=data)
+
+    async def create_shared_link_with_settings(self, path):
+        data = {
+            'path': path,
+            'settings': {
+                'requested_visibility': "public"
+            }
+        }
+        headers = {
+            'Authorization': self.token,
+            'Content-Type': "application/json",
+        }
+
+        return await self.requests(endpoint=self.create_shared_link_with_settings_endpoint, headers=headers, data=data)
