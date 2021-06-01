@@ -13,6 +13,6 @@ pyppeteer==0.0.25
 requests==2.20.1
 six==1.11.0
 tqdm==4.28.1
-urllib3==1.24.1
+urllib3==1.26.5
 websockets==7.0
 yarl==1.2.6
